@@ -2,7 +2,7 @@ package ut7.agenda.io;
 import ut7.agenda.modelo.*;
 
 /**
- * @version 1.0,
+ * @version 1.1
  * @author Jhon Vera, Diana Peralta, Adrian Vitoria
  * Lee una liniea de datos para agregarlos a la agenda.
  */ 
