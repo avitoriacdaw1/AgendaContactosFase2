@@ -7,7 +7,7 @@ import ut7.agenda.io.AgendaIO;
 import ut7.agenda.modelo.*;
 
 /**
- * @version 1.0,
+ * @version 1.1,
  * @author Jhon Vera, Diana Peralta, Adrian Vitoria
  * Main para probar todos los metodos de la clase AgendaContactos
  */  
