@@ -1,8 +1,8 @@
-package ut7.agenda.test;
+package agenda.test;
 import java.util.ArrayList;
 import java.util.List;
 
-import ut7.agenda.modelo.*;
+import agenda.modelo.*;
 
 /**
  * @version 1.0,

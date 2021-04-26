@@ -1,5 +1,5 @@
-package ut7.agenda.io;
-import ut7.agenda.modelo.*;
+package agenda.io;
+import agenda.modelo.*;
 
 /**
  * @version 1.1
