@@ -6,7 +6,7 @@ package agenda.modelo;
  * Representacion de un conctacto de la agenda
  */ 
 
-public abstract class Contacto {
+public abstract class Contacto implements Comparable<Contacto> {
 	
 	/**
 	 * Atributos
@@ -115,6 +115,7 @@ public abstract class Contacto {
 		return letra;
 	}
 	
+	@Override
 	/**
 	 * Compara dos contactos, para saber si son iguales
 	 * @param objeto que se va a comparar
@@ -122,10 +123,7 @@ public abstract class Contacto {
 	 * clase, tienen el mismo nombre, apellidos y email. En otro caso devuelve false 
 	 */
 	public boolean equals(Object obj) {
-		if(hashCode() == obj.hashCode()) {
-			return true;
-		}
-		return false;
+		return hashCode() == obj.hashCode();
 	}
 	
 	/**
@@ -136,30 +134,10 @@ public abstract class Contacto {
 	 * 0 -> si la variable apellidos es igual que el apellidos del contacto como parametro
 	 */
 	public int compareTo(Contacto c) {
-		if(apellidos.hashCode() < c.apellidos.hashCode()) {
-			return -1;
+		if(apellidos.compareToIgnoreCase(c.apellidos) == 0) {
+			return nombre.compareTo(c.nombre);
 		}
-		if(apellidos.equalsIgnoreCase(c.apellidos) ) {
-			return 0;
-		}
-		return 1;
-	}
-	
-	/**
-	 * Compara dos contactos por la varible nombre
-	 * @param el contacto con que se va a comparar
-	 * @return 1 -> si el hashcode del nombre es mayor que el nombre del contacto como parametro
-	 * -1 -> si el hashcode del nombre es menor que el nombre del contacto como parametro
-	 * 0 -> si la variable nombre es igual que el nombre del contacto como parametro
-	 */
-	public int compareTo2(Contacto c) {
-		if(nombre.hashCode() < c.nombre.hashCode()) {
-			return -1;
-		}
-		if(nombre.equalsIgnoreCase(c.nombre)) {
-			return 0;
-		}
-		return 1;
+		return apellidos.compareToIgnoreCase(c.apellidos);
 	}
 	
 	/**

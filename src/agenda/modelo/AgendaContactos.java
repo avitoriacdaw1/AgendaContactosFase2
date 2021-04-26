@@ -78,7 +78,7 @@ public class AgendaContactos {
 		for(char key : agenda.keySet()) {
 			salida += key + " (" + agenda.get(key).size() + " contacto/s)\n"
 					+ "---------------\n"; //Agrega a la cantidad total de contactos a la variable
-			Iterator<Contacto> it = agenda.get(key).iterator(); // crea un iterador
+			Iterator<Contacto> it = contactosEnLetra(key).iterator(); // crea un iterador
 			while(it.hasNext()) {
 				salida += it.next().toString() + "\n";//Usa el toString de contactos para agregarlo ala varible
 			}

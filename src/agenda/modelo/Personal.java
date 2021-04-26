@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
  * Representacion de un conctacto Personal de la agenda
  */ 
 
-public class Personal extends Contacto{ // Padre: Contacto
+public class Personal extends Contacto { // Padre: Contacto
 
 	// Atributos
 	private LocalDate fecnac; // Fecha nacimiento
@@ -61,8 +61,4 @@ public class Personal extends Contacto{ // Padre: Contacto
 	public String toString() {
 		return super.toString() + "Fecha nacimiento: " + this.formatoFecha() + "\nRelación: " + this.getRelacion() + "\n"; // Añade fecha nacimiento y relación
 	}
-	
-	
-	
-
 }
