@@ -1,59 +1,101 @@
 package agenda.io;
+
+import java.io.FileWriter;
+import java.io.IOException;
+
 import agenda.modelo.*;
 
 /**
  * @version 1.1
- * @author Jhon Vera, Diana Peralta, Adrian Vitoria
- * Lee una liniea de datos para agregarlos a la agenda.
- */ 
+ * @author Jhon Vera, Diana Peralta, Adrian Vitoria Lee una liniea de datos para
+ *         agregarlos a la agenda.
+ */
 
-public class AgendaIO{
-	
-	/*
-	 * Guarda la información del metodo obtenerLineasDatos y añade la información a esta
+public class AgendaIO {
+
+	/**
+	 * Guarda la información del metodo obtenerLineasDatos y añade la información a
+	 * esta
+	 * 
 	 * @param agenda de la clase AgendaContactos
-	 * @return 
+	 * @return
 	 */
 	public static void importar(AgendaContactos agenda) {
-		for(int i = 0 ; i <obtenerLineasDatos().length; i++) {
+		for (int i = 0; i < obtenerLineasDatos().length; i++) {
 			Contacto contacto = parsearLinea(obtenerLineasDatos()[i]);
 			agenda.añadirContacto(contacto);
 			agenda.añadirContacto(contacto);
 		}
 	}
-	/*
-	 * Guarda cada dato de cada contacto dentro de un Array  
+
+	public static void exportar(AgendaContactos agenda, String file) {
+		FileWriter fw = null;
+
+		try {
+			fw = new FileWriter(file);
+		}
+
+		catch (IOException io) {
+			System.out.println("Error al abrir el fichero");
+		}
+		// Escribimos
+
+		try {
+			String mensaje = "";
+			for(Relacion key : agenda.personalesPorRelacion().keySet()) {
+				mensaje += key.toString() + "\n\t";
+				mensaje += agenda.personalesPorRelacion().get(key).toString() + "\n";
+			}
+			fw.write(mensaje);
+			System.out.println("Fichero guardado");
+		}
+		
+		catch (IOException io) {
+			System.out.println("Error al escribir");
+		}
+		// cerramos el fichero
+
+		finally {
+			try {
+				fw.close();
+			} catch (IOException io) {
+				System.out.println("Error al cerrar el archivo");
+			}
+		}
+	}
+
+	/**
+	 * Guarda cada dato de cada contacto dentro de un Array
+	 * 
 	 * @param cada linea guardada en el metodo anterior
 	 * @return un array de un nuevo contacto con su respectiva información
 	 */
 	private static Contacto parsearLinea(String linea) {
 		String[] datosLinea = linea.split(",");
-		
+
 		String nombre = datosLinea[1].trim();
 		String apellidos = datosLinea[2].trim();
 		String telefono = datosLinea[3].trim();
 		String email = datosLinea[4].trim();
-		
-			if(Integer.valueOf(datosLinea[0].trim()) == 1) {
-				String nombreEmpresa = datosLinea[5].trim();
-				return new Profesional(nombre, apellidos, telefono, email, nombreEmpresa);
-			}
-			else {
-				String fechaNac = datosLinea[5].trim();
-				Relacion relacion = Relacion.valueOf(datosLinea[6].trim().toUpperCase());
-				return new Personal(nombre, apellidos, telefono, email, fechaNac, relacion);
-			}
+
+		if (Integer.valueOf(datosLinea[0].trim()) == 1) {
+			String nombreEmpresa = datosLinea[5].trim();
+			return new Profesional(nombre, apellidos, telefono, email, nombreEmpresa);
+		} else {
+			String fechaNac = datosLinea[5].trim();
+			Relacion relacion = Relacion.valueOf(datosLinea[6].trim().toUpperCase());
+			return new Personal(nombre, apellidos, telefono, email, fechaNac, relacion);
+		}
 	}
 
 	/**
 	 * 
-	 * @return un array de String con todas las líneas de información de todos
-	 *         los contactos. 1 significa contacto profesional, 2 significa
-	 *         contacto personal
+	 * @return un array de String con todas las líneas de información de todos los
+	 *         contactos. 1 significa contacto profesional, 2 significa contacto
+	 *         personal
 	 */
 	private static String[] obtenerLineasDatos() {
-		return new String[] {
-				"1, Isabel, Acosta Mendioroz,  678895433 ,  iacostamen@gmail.com ,  walden estrella ",
+		return new String[] { "1, Isabel, Acosta Mendioroz,  678895433 ,  iacostamen@gmail.com ,  walden estrella ",
 				"2,  pedro , urruti tello , 616789654 ,  urrutitello@gmail.com , 09/03/2007, amigos",
 				"1, Angel , Esteban Grande , 674544123 ,  aestebang@gmail.com ,  magma publicidad ",
 				"2, elena , bueno ganuza , 6786547699 ,  ebuenogan@gmail.com , 17/03/2000, amigos",

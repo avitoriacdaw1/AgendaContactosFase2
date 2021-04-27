@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 /**
- * @version 1.0,
+ * @version 1.1
  * @author Jhon Vera, Diana Peralta, Adrian Vitoria
  * Simula una agenda de contactos 
  */ 
