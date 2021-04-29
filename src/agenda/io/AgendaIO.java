@@ -19,6 +19,7 @@ public class AgendaIO {
 	 * 
 	 * @param agenda de la clase AgendaContactos
 	 * @return
+	 *  
 	 */
 	public static int importar(AgendaContactos agenda, String texto) throws Exception {
 		int error = 0;
@@ -30,7 +31,7 @@ public class AgendaIO {
 				agenda.añadirContacto(contacto);
 			}
 		}
-		catch (Exception e) {
+		catch (IOException e) {
 			error++;
 		}
 		finally {
@@ -81,24 +82,55 @@ public class AgendaIO {
 	 * @param cada linea guardada en el metodo anterior
 	 * @return un array de un nuevo contacto con su respectiva información
 	 */
-	private static Contacto parsearLinea(String linea) {
+	private static Contacto parsearLinea(String linea) throws Exception{
 		String[] datosLinea = linea.split(",");
 
 		String nombre = datosLinea[1].trim();
 		String apellidos = datosLinea[2].trim();
 		String telefono = datosLinea[3].trim();
 		String email = datosLinea[4].trim();
-
+		Relacion relacion = null;
 		if (Integer.valueOf(datosLinea[0].trim()) == 1) {
 			String nombreEmpresa = datosLinea[5].trim();
 			return new Profesional(nombre, apellidos, telefono, email, nombreEmpresa);
-		} else {
+		} 
+		else {
 			String fechaNac = datosLinea[5].trim();
-			Relacion relacion = Relacion.valueOf(datosLinea[6].trim().toUpperCase());
+			String[] fechas = fechaNac.split("/");
+			try
+			  {
+				if(Integer.parseInt(fechas[0]) < 1 || Integer.parseInt(fechas[0]) > 31) {
+					throw new IllegalStateException("Dia del mes invalido");
+				}
+				if(Integer.parseInt(fechas[1]) < 1 || Integer.parseInt(fechas[1]) > 12) {
+					throw new IllegalStateException("Mes invalido");
+				}
+				if(Integer.parseInt(fechas[2]) < 1900) {
+					throw new IllegalStateException("Año invalido");
+				}
+			  } 
+			catch(IllegalArgumentException e) 
+			  {
+			    System.out.println("Formato de fecha invalido");
+			  }
+			try{
+				relacion = Relacion.valueOf(datosLinea[6].trim().toUpperCase());
+			  } 
+			catch(IllegalArgumentException e) 
+			  {
+				boolean rel = false;
+				for(Relacion d : Relacion.values()) {
+					if(String.valueOf(d).equalsIgnoreCase(datosLinea[6].trim()) ) {
+						rel = true;
+					}
+				}
+				if(rel = false) {
+					throw new IllegalStateException("Relacio invalida");
+				}
+			  }
 			return new Personal(nombre, apellidos, telefono, email, fechaNac, relacion);
 		}
 	}
-
 	/**
 	 * 
 	 * @return un array de String con todas las líneas de información de todos los
@@ -127,7 +159,7 @@ public class AgendaIO {
 				" 2, daniel , martin martin , 678901234 ,  damrtinmartin@gmail.com , 15/07/1980, amigos",
 				"  2, pablo , martin abradelo , 667788899 ,  martinabra@gmail.com , 31/01/2010, amigos",
 				"  2, susana , santaolalla bilbao , 676767676 ,  ssantaolalla@gmail.com , 17/03/1998, amigos",
-				"  2, adur ,  martin merino ,  611112113 , adurmartinme@gmail.com ,  14/02/2003 , amigos" };
+				"  2, adur ,  martin merino ,  611112113 , adurmartinme@gmail.com ,  14/02/2003 , primo" };
 
 	}
 
