@@ -20,12 +20,23 @@ public class AgendaIO {
 	 * @param agenda de la clase AgendaContactos
 	 * @return
 	 */
-	public static void importar(AgendaContactos agenda) {
-		for (int i = 0; i < obtenerLineasDatos().length; i++) {
-			Contacto contacto = parsearLinea(obtenerLineasDatos()[i]);
-			agenda.añadirContacto(contacto);
-			agenda.añadirContacto(contacto);
+	public static int importar(AgendaContactos agenda, String texto) throws Exception {
+		int error = 0;
+		try /*Si se cambia el throw de importar, tambien hay que cambiarlo en el test*/
+		{
+			for (int i = 0; i < obtenerLineasDatos().length; i++) { /*Este for es el importar original*/
+				Contacto contacto = parsearLinea(obtenerLineasDatos()[i]);
+				agenda.añadirContacto(contacto);
+				agenda.añadirContacto(contacto);
+			}
 		}
+		catch (Exception e) {
+			error++;
+		}
+		finally {
+			
+		}
+		return error;
 	}
 
 	public static void exportar(AgendaContactos agenda, String file) {
@@ -94,7 +105,7 @@ public class AgendaIO {
 	 *         contactos. 1 significa contacto profesional, 2 significa contacto
 	 *         personal
 	 */
-	private static String[] obtenerLineasDatos() {
+	private static String[] obtenerLineasDatos() { /*Esto hay que borrar*/
 		return new String[] { "1, Isabel, Acosta Mendioroz,  678895433 ,  iacostamen@gmail.com ,  walden estrella ",
 				"2,  pedro , urruti tello , 616789654 ,  urrutitello@gmail.com , 09/03/2007, amigos",
 				"1, Angel , Esteban Grande , 674544123 ,  aestebang@gmail.com ,  magma publicidad ",
