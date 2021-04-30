@@ -16,7 +16,8 @@ public class TestAgenda {
 
 	public static void main(String[] args) throws Exception { 
 		AgendaContactos agenda = new AgendaContactos();
-		AgendaIO.importar(agenda,"agenda.csv"); /*Si se cambia el throw de importar, tambien hay que cambiarlo en el test*/
+		; /*Si se cambia el throw de importar, tambien hay que cambiarlo en el test*/
+		System.out.println(AgendaIO.importar(agenda,"agenda.csv")+" errores");
 		System.out.println(agenda);
 		separador();
 		buscarContactos(agenda, "acos");
