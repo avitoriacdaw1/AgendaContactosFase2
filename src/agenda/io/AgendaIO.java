@@ -34,13 +34,13 @@ public class AgendaIO {
 			entrada = new BufferedReader(new FileReader(texto));
 			String linea = entrada.readLine();
 			while (linea != null){
-				linea = entrada.readLine();
 				try {
 					agenda.añadirContacto(parsearLinea(linea));
 				}
 				catch (NullPointerException io) {
 					error ++;
 				}
+				linea = entrada.readLine();
 			}
 		}
 		catch (IOException e){
