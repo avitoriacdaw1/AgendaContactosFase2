@@ -1,7 +1,12 @@
 package agenda.io;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.format.DateTimeParseException;
+import java.util.Scanner;
 
 import agenda.modelo.*;
 
@@ -23,20 +28,60 @@ public class AgendaIO {
 	 */
 	public static int importar(AgendaContactos agenda, String texto) throws Exception {
 		int error = 0;
-		try /*Si se cambia el throw de importar, tambien hay que cambiarlo en el test*/
+		
+		BufferedReader entrada = null;
+		try
 		{
-			for (int i = 0; i < obtenerLineasDatos().length; i++) { /*Este for es el importar original*/
-				Contacto contacto = parsearLinea(obtenerLineasDatos()[i]);
+			entrada = new BufferedReader(new FileReader(texto));
+			String linea = entrada.readLine();
+			while (linea != null)
+			{
+				Contacto contacto = parsearLinea(linea);
+				linea = entrada.readLine();
 				agenda.añadirContacto(contacto);
 				agenda.añadirContacto(contacto);
 			}
 		}
-		catch (IOException e) {
+		catch (IOException e)
+		{
+			System.out.println("Error al leer " + texto);
 			error++;
 		}
-		finally {
+		finally
+		{
+			if (entrada != null)
+			{
+				try
+				{
+					entrada.close();
+				}
+				catch (NullPointerException e)
+				{
+					System.out.println(e.getMessage());
+					error++;
+				}
+				
+				catch (IOException e)
+				{
+					System.out.println(e.getMessage());
+					error++;
+				}
+			}
+		} 
+		//try /*Si se cambia el throw de importar, tambien hay que cambiarlo en el test*/
+		//{
+			//for (int i = 0; i < obtenerLineasDatos().length; i++) { /*Este for es el importar original*/
+				//Contacto contacto = parsearLinea(obtenerLineasDatos()[i]);
+				//agenda.añadirContacto(contacto);
+				//agenda.añadirContacto(contacto);
+			//}
+		//}
+		//catch (IOException e) {
+			//error++;
+		//}
+		//finally {
 			
-		}
+		//}
 		return error;
 	}
 
@@ -99,11 +144,21 @@ public class AgendaIO {
 			String[] fechas = fechaNac.split("/");
 			try
 			  {
-				if(Integer.parseInt(fechas[0]) < 1 || Integer.parseInt(fechas[0]) > 31) {
-					throw new IllegalStateException("Dia del mes invalido");
+				if (fechas[0].length() <= 2) {
+					if(Integer.parseInt(fechas[0]) < 1 || Integer.parseInt(fechas[0]) > 31) {
+						throw new IllegalStateException("Dia del mes invalido");
+					}
+					else if (fechas[0].length() < 2) {
+						throw new IllegalStateException("Formato de dia del mes invalido");
+					}
 				}
-				if(Integer.parseInt(fechas[1]) < 1 || Integer.parseInt(fechas[1]) > 12) {
-					throw new IllegalStateException("Mes invalido");
+				if (fechas[1].length() <= 2) {
+					if(Integer.parseInt(fechas[1]) < 1 || Integer.parseInt(fechas[1]) > 12 || fechas[1].length() < 2) {
+						throw new IllegalStateException("Mes invalido");
+					}
+					else if (fechas[1].length() < 2) {
+						throw new IllegalStateException("Formato del mes invalido");
+					}
 				}
 				if(Integer.parseInt(fechas[2]) < 1900) {
 					throw new IllegalStateException("Año invalido");
@@ -113,6 +168,7 @@ public class AgendaIO {
 			  {
 			    System.out.println("Formato de fecha invalido");
 			  }
+			
 			try{
 				relacion = Relacion.valueOf(datosLinea[6].trim().toUpperCase());
 			  } 
@@ -128,6 +184,7 @@ public class AgendaIO {
 					throw new IllegalStateException("Relacio invalida");
 				}
 			  }
+			
 			return new Personal(nombre, apellidos, telefono, email, fechaNac, relacion);
 		}
 	}
