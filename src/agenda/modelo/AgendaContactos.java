@@ -31,7 +31,7 @@ public class AgendaContactos {
 	 */
 	public void añadirContacto(Contacto con) { // Adrian
 		
-		if (agenda.containsKey(con.getPrimeraLetra())==false) { // Comprueba si existe una clave que coincida con la inicial del apellido
+		if (agenda.containsKey(con.getPrimeraLetra()) == false) { // Comprueba si existe una clave que coincida con la inicial del apellido
 			LinkedHashSet<Contacto> tes = new LinkedHashSet<>(); // Si no existe, la crea
 			tes.add(con);
 			agenda.put(con.getPrimeraLetra(), tes);

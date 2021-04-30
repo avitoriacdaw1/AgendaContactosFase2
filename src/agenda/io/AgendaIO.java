@@ -26,37 +26,25 @@ public class AgendaIO {
 	 * @return
 	 *  
 	 */
-	public static int importar(AgendaContactos agenda, String texto) throws Exception {
+	public static int importar(AgendaContactos agenda, String texto) {
 		int error = 0;
-		String[] contactos = obtenerLineasDatos();
-		try {
-			for(int i = 0; i < contactos.length; i ++) {
-			Contacto contacto = parsearLinea(contactos[i]);
-			agenda.añadirContacto(contacto);				}
-		}	
-		catch (NumberFormatException e) {
-			System.out.println("Error al leer " + texto);
-			error ++;
-		}
-		catch (NullPointerException e) {
-			System.out.println(e.getMessage());
-			error ++;
-		}
-		return error;
-		/*BufferedReader entrada = null;
+		BufferedReader entrada = null;
 		try
 		{
 			entrada = new BufferedReader(new FileReader(texto));
 			String linea = entrada.readLine();
-			while (linea != null)
-			{
-				Contacto contacto = parsearLinea(linea);
+			while (linea != null){
 				linea = entrada.readLine();
-				agenda.añadirContacto(contacto);
+				try {
+					agenda.añadirContacto(parsearLinea(linea));
+				}
+				catch (NullPointerException io) {
+					System.out.println("Valor nulo");
+					error ++;
+				}
 			}
 		}
-		catch (IOException e)
-		{
+		catch (IOException e){
 			System.out.println("Error al leer " + texto);
 			error++;
 		}
@@ -81,20 +69,8 @@ public class AgendaIO {
 				}
 			}
 		} 
-		//try /*Si se cambia el throw de importar, tambien hay que cambiarlo en el test*/
-		//{
-			//for (int i = 0; i < obtenerLineasDatos().length; i++) { /*Este for es el importar original*/
-				//Contacto contacto = parsearLinea(obtenerLineasDatos()[i]);
-				//agenda.añadirContacto(contacto);
-				//agenda.añadirContacto(contacto);
-			//}
-		//}
-		//catch (IOException e) {
-			//error++;
-		//}
-		//finally {
-			
-		//}/*
+		return error;
+	
 	}
 
 	public static void exportar(AgendaContactos agenda, String file) {
@@ -139,66 +115,35 @@ public class AgendaIO {
 	 * @param cada linea guardada en el metodo anterior
 	 * @return un array de un nuevo contacto con su respectiva información
 	 */
-	private static Contacto parsearLinea(String linea) throws Exception{
+	private static Contacto parsearLinea(String linea){
 		String[] datosLinea = linea.split(",");
 
 		String nombre = datosLinea[1].trim();
 		String apellidos = datosLinea[2].trim();
 		String telefono = datosLinea[3].trim();
 		String email = datosLinea[4].trim();
+		String nombreEmpresa = "";
 		Relacion relacion = null;
-		if (Integer.valueOf(datosLinea[0].trim()) == 1) {
-			String nombreEmpresa = datosLinea[5].trim();
-			return new Profesional(nombre, apellidos, telefono, email, nombreEmpresa);
+		String fechaNac = "";
+		if (Integer.valueOf(datosLinea[0].trim()) == 2) {
+			try {
+				fechaNac = datosLinea[5].trim();
+				relacion = Relacion.valueOf(datosLinea[6].trim().toUpperCase());
+				 return new Personal(nombre, apellidos, telefono, email, fechaNac, relacion);
+			}
+			catch(DateTimeParseException e){
+				e.getMessage();
+			}
+			catch(IllegalArgumentException e){
+				e.getMessage();
+			}
+			return null;
 		} 
 		else {
-			String fechaNac = datosLinea[5].trim();
-			String[] fechas = fechaNac.split("/");
-			try
-			  {
-				if (fechas[0].length() <= 2) {
-					if(Integer.parseInt(fechas[0]) < 1 || Integer.parseInt(fechas[0]) > 31) {
-						throw new IllegalStateException("Dia del mes invalido");
-					}
-					else if (fechas[0].length() < 2) {
-						throw new IllegalStateException("Formato de dia del mes invalido");
-					}
-				}
-				if (fechas[1].length() <= 2) {
-					if(Integer.parseInt(fechas[1]) < 1 || Integer.parseInt(fechas[1]) > 12 || fechas[1].length() < 2) {
-						throw new IllegalStateException("Mes invalido");
-					}
-					else if (fechas[1].length() < 2) {
-						throw new IllegalStateException("Formato del mes invalido");
-					}
-				}
-				if(Integer.parseInt(fechas[2]) < 1900) {
-					throw new IllegalStateException("Año invalido");
-				}
-			  } 
-			catch(NullPointerException e) 
-			  {
-			    System.out.println("Formato de fecha invalido");
-			  }
-			
-			try{
-				relacion = Relacion.valueOf(datosLinea[6].trim().toUpperCase());
-			  } 
-			catch(IllegalArgumentException e) 
-			  {
-				boolean rel = false;
-				for(Relacion d : Relacion.values()) {
-					if(String.valueOf(d).equalsIgnoreCase(datosLinea[6].trim()) ) {
-						rel = true;
-					}
-				}
-				if(rel = false) {
-					throw new IllegalStateException("Relacio invalida");
-				}
-			  }
-			
-			return new Personal(nombre, apellidos, telefono, email, fechaNac, relacion);
+			nombreEmpresa = datosLinea[5].trim();
+			return new Profesional(nombre, apellidos, telefono, email, nombreEmpresa);
 		}
+		
 	}
 	/**
 	 * 
