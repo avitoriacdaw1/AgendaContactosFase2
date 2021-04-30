@@ -39,7 +39,6 @@ public class AgendaIO {
 					agenda.añadirContacto(parsearLinea(linea));
 				}
 				catch (NullPointerException io) {
-					System.out.println("Valor nulo");
 					error ++;
 				}
 			}
