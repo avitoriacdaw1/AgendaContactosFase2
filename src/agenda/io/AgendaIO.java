@@ -28,8 +28,22 @@ public class AgendaIO {
 	 */
 	public static int importar(AgendaContactos agenda, String texto) throws Exception {
 		int error = 0;
-		
-		BufferedReader entrada = null;
+		String[] contactos = obtenerLineasDatos();
+		try {
+			for(int i = 0; i < contactos.length; i ++) {
+			Contacto contacto = parsearLinea(contactos[i]);
+			agenda.añadirContacto(contacto);				}
+		}	
+		catch (NumberFormatException e) {
+			System.out.println("Error al leer " + texto);
+			error ++;
+		}
+		catch (NullPointerException e) {
+			System.out.println(e.getMessage());
+			error ++;
+		}
+		return error;
+		/*BufferedReader entrada = null;
 		try
 		{
 			entrada = new BufferedReader(new FileReader(texto));
@@ -38,7 +52,6 @@ public class AgendaIO {
 			{
 				Contacto contacto = parsearLinea(linea);
 				linea = entrada.readLine();
-				agenda.añadirContacto(contacto);
 				agenda.añadirContacto(contacto);
 			}
 		}
@@ -81,8 +94,7 @@ public class AgendaIO {
 		//}
 		//finally {
 			
-		//}
-		return error;
+		//}/*
 	}
 
 	public static void exportar(AgendaContactos agenda, String file) {
@@ -164,7 +176,7 @@ public class AgendaIO {
 					throw new IllegalStateException("Año invalido");
 				}
 			  } 
-			catch(IllegalArgumentException e) 
+			catch(NullPointerException e) 
 			  {
 			    System.out.println("Formato de fecha invalido");
 			  }
